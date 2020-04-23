@@ -157,7 +157,7 @@ given a value of $R_t$.
 
 Any time you need to model ``arrivals'' over some time
 period of time, statisticians like to use the 
-[[Poisson Distribution][https://en.wikipedia.org/wiki/Poisson_distribution]].
+[[https://en.wikipedia.org/wiki/Poisson_distribution][Poisson Distribution]].
 Given an average arrival rate of $\lambda$ new cases per day, the probability of
 seeing $k$ new cases is distributed according to the Poisson distribution:
 \begin{align*}
