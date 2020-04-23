@@ -400,6 +400,7 @@ print( f'.\n{hdi.tail()}' )
 : 
 : 
 
+
 Finally, we can plot both the most likely values for $R_t$ and the HDIs over
 time. This is the most useful representation as it shows how our beliefs
 change with every day.
@@ -411,7 +412,8 @@ def plot_it(filename):
         label='Most Likely',
         title=f'$R_t$ by day',
         c='k',
-        markersize=4
+        markersize=4,
+        figsize=(10,6.5)
     )
     ax.fill_between(
         hdi.index,
@@ -429,6 +431,7 @@ def plot_it(filename):
 plot_it(filename='./img/systrom-5.png')
 #+end_src
 
+#+attr_latex: :width 0.6\linewidth
 #+RESULTS:
 [[file:./img/systrom-5.png]]
 
