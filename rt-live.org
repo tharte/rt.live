@@ -47,7 +47,10 @@ Source:
 %run rt_live_functions.py
 from IPython.display import clear_output
 
-get_ipython().run_line_magic('config', "InlineBackend.figure_format = 'retina'")
+# get_ipython().run_line_magic('config', "InlineBackend.figure_format = 'retina'")
+
+import matplotlib
+matplotlib.use('Agg')  # Agg backend for non-interactive use with Org
 #+end_src
 
 
