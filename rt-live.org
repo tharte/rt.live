@@ -48,36 +48,47 @@ from IPython.display import clear_output
 get_ipython().run_line_magic('config', "InlineBackend.figure_format = 'retina'")
 #+end_src
 
+#+BEGIN_SRC python :session *Python-3.x* :exports none :results silent :eval no
+# org-specific functions
+matplotlib.use('Agg')  # Agg backend for non-interactive use with Org
+
+sys.path.insert(0, '/home/tharte/j/proj/wrex')
+from wrex.tools.utils import *
+#+END_SRC
 
 Temporary reference to avoid issues with BibTeX:
 \cite[Online peer-reviewed journal]{Bettencourt:08}
 
-In any epidemic, $R_t$ is the measure known as the effective reproduction
-number. It's the number of people who become infected per infectious person at
+* Estimating COVID-19's $R_t$ in Real-Time
+In any epidemic, $R_t$ is the measure known as the 
+/effective reproduction number/. 
+It's the number of people who become infected per infectious person at
 time $t$. The most well-known version of this number is the basic reproduction
 number: $R_0$ when $t=0$. However, $R_0$ is a single measure that does not
 adapt with changes in behavior and restrictions.
 
 As a pandemic evolves, increasing restrictions (or potential releasing of
 restrictions) changes $R_t$. Knowing the current $R_t$ is essential. When
-$R\gg1$, the pandemic will spread through a large part of the population. If
+$R\gg 1$, the pandemic will spread through a large part of the population. If
 $R_t<1$, the pandemic will slow quickly before it has a chance to infect many
 people. The lower the $R_t$: the more manageable the situation. In general,
 any $R_t<1$ means things are under control.
 
-The value of $R_t$ helps us in two ways. (1) It helps us understand
-how effective our measures have been controlling an outbreak
-and (2) it gives us vital information about whether we should
-increase or reduce restrictions based on our competing goals of
-economic prosperity and human safety. [Well-respected epidemiologists
-argue](https://www.nytimes.com/2020/04/06/opinion/coronavirus-end-social-distancing.html)
-that tracking $R_t$ is the only way to manage through this crisis.
+The value of $R_t$ helps us in two ways. 
+1. It helps us understand how effective our measures have been controlling an 
+   outbreak and 
+2. It gives us vital information about whether we should
+   increase or reduce restrictions based on our competing goals of
+   economic prosperity and human safety. 
+   [[https://www.nytimes.com/2020/04/06/opinion/coronavirus-end-social-distancing.html][Well-respected epidemiologists argue]]
+   that tracking $R_t$ is the only way to manage through this crisis.
 
 Yet, today, we don't yet use $R_t$ in this way. In fact,
-the only real-time measure I've seen has been for [Hong
-Kong](https://covid19.sph.hku.hk/dashboard). More importantly, it is not
-useful to understand $R_t$ at a national level. Instead, to manage this crisis
-effectively, we need a local (state, county and/or city) granularity of $R_t$.
+the only real-time measure I've seen has been for 
+[[https://covid19.sph.hku.hk/dashboard][Hong Kong]]. 
+More importantly, it is not useful to understand $R_t$ at a national
+level. Instead, to manage this crisis effectively, we need a local (state,
+county and/or city) granularity of $R_t$.
 
 What follows is a solution to this problem at the US State level. It's a
 modified version of a solution created by \cite{Bettencourt:08} to estimate
@@ -86,19 +97,17 @@ static $R$ value, here we introduce a process model with Gaussian noise to
 estimate a time-varying $R_t$.
 
 If you have questions, comments, or improvments feel free to get in touch:
-[hello@systrom.com](mailto:hello@systrom.com). And if it's not entirely clear,
-I'm not an epidemiologist. At the same time, data is data, and statistics
-are statistics and this is based on work by well-known epidemiologists so
-you can calibrate your beliefs as you wish. In the meantime, I hope you can
-learn something new as I did by reading through this example. Feel free to
-take this work and apply it elsewhere – internationally or to counties in
-the United States.
+[[mailto:hello@systrom.com][hello@systrom.com]]. 
+And if it's not entirely clear, I'm not an epidemiologist. 
+At the same time, data is data, and statistics are statistics and this
+is based on work by well-known epidemiologists so you can calibrate your
+beliefs as you wish. In the meantime, I hope you can learn something new
+as I did by reading through this example. Feel free to take this work and
+apply it elsewhere – internationally or to counties in the United States.
 
-Additionally, a huge thanks to [Frank
-Dellaert](http://www.twitter.com/fdellaert/) who suggested the addition
-of the process and to [Adam Lerer](http://www.twitter.com/adamlerer/) who
-implemented the changes. Not only did I learn something new, it made the
-model much more responsive.
+Additionally, a huge thanks to [[http://www.twitter.com/fdellaert][Frank Dellaert]] who suggested the addition
+of the process and to [[http://www.twitter.com/adamlerer][Adam Lerer]] who implemented the changes. 
+Not only did I learn something new, it made the model much more responsive.
 
 
 \newpage
