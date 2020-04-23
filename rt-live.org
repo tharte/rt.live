@@ -45,12 +45,15 @@ Source:
 #+begin_src python :session *Python-3.x* :exports none :results silent
 # notebook-specific functions
 %run rt_live_functions.py
-from IPython.display import clear_output
+#+end_src
 
+#+begin_src python :session *Python-3.x* :exports none :results silent
 # get_ipython().run_line_magic('config', "InlineBackend.figure_format = 'retina'")
+from IPython.display import set_matplotlib_formats
+set_matplotlib_formats('retina')
 
-import matplotlib
-matplotlib.use('Agg')  # Agg backend for non-interactive use with Org
+#import matplotlib
+#matplotlib.use('Agg')  # Agg backend for non-interactive use with Org
 #+end_src
 
 
