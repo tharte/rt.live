@@ -48,16 +48,6 @@ from IPython.display import clear_output
 get_ipython().run_line_magic('config', "InlineBackend.figure_format = 'retina'")
 #+end_src
 
-#+BEGIN_SRC python :session *Python-3.x* :exports none :results silent :eval no
-# org-specific functions
-matplotlib.use('Agg')  # Agg backend for non-interactive use with Org
-
-sys.path.insert(0, '/home/tharte/j/proj/wrex')
-from wrex.tools.utils import *
-#+END_SRC
-
-Temporary reference to avoid issues with BibTeX:
-\cite[Online peer-reviewed journal]{Bettencourt:08}
 
 * Introduction
 In any epidemic, $R_t$ is the measure known as the 
@@ -222,8 +212,6 @@ while varying $\lambda$. *This is called the likelihood function.*
 For example, imagine we observe $k=20$ new cases, and we want to know how
 likely each $\lambda$ is:
 
-# In[16]:
-
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results file
 k = 20
 lam = np.linspace(1, 45, 90)
@@ -260,22 +248,20 @@ parameterized by $R_t$. We need to know the relationship between $\lambda$
 and $R_t$
 
 * Connecting $\lambda$ and $R_t$
-_The key insight to making this work is to realize there's a connection between $R_t$ and $\lambda$__. [The derivation](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0002185) is beyond the scope of this notebook, but here it is:
-
-\begin{equation}
-    \lambda = k_{t-1}e^{\gamma(R_t-1)}
-\end{equation}
-
-where $\gamma$ is the reciprocal of the serial interval ([about 7 days for COVID19](https://wwwnc.cdc.gov/eid/article/26/7/20-0282_article)). Since we know every new case count on the previous day, we can now reformulate the likelihood function as a Poisson parameterized by fixing $k$ and varying $R_t$.
-
-\begin{equation}
-    \lambda = k_{t-1}e^{\gamma(R_t-1)}
-\end{equation}
-
-\begin{equation}
-    P\left(k|R_t\right) = \frac{\lambda^k e^{-\lambda}}{k!}
-\end{equation}
-
+*The key insight to making this work is to realize there's a connection between $R_t$ and $\lambda$*. 
+[[https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0002185][The derivation]] is beyond the scope of this notebook, but here it is:
+\begin{align*}
+    \lambda &= k_{t-1}e^{\gamma(R_t-1)}
+\end{align*}
+where $\gamma$ is the reciprocal of the serial interval 
+([[https://wwwnc.cdc.gov/eid/article/26/7/20-0282_article][about 7 days for COVID19]]). 
+Since we know every new case count on the previous day, we can now reformulate
+the likelihood function as a Poisson parameterized by fixing $k$ and varying
+$R_t$.
+\begin{align*}
+    \Pr\left(k\mid R_t\right) 
+        &= \frac{\lambda^k e^{-\lambda}}{k!}
+\end{align*}
 
 
 \newpage
