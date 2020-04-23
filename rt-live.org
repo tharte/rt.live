@@ -1,6 +1,6 @@
 # -*- org-confirm-babel-evaluate: nil -*- 
 #+author:      Thomas P. Harte
-#+title:       $R_t$ Covid-19
+#+title:       Estimating COVID-19's $R_t$ in Real-Time
 #+email:       tharte@cantab.net
 #+property:      :tangle yes :exports code :results output
 #+html_mathjax:  align:"left" path:"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"
@@ -59,7 +59,7 @@ from wrex.tools.utils import *
 Temporary reference to avoid issues with BibTeX:
 \cite[Online peer-reviewed journal]{Bettencourt:08}
 
-* Estimating COVID-19's $R_t$ in Real-Time
+* Introduction
 In any epidemic, $R_t$ is the measure known as the 
 /effective reproduction number/. 
 It's the number of people who become infected per infectious person at
