@@ -193,8 +193,8 @@ all at once, and *you will see it used again below*!
 
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results file
 def plot_it(filename):
-    fig, ax = plt.subplots(figsize=(6,2.5))
-    ax.set(title='Poisson Distribution of Cases\n $p(k|\lambda)$')
+    fig, ax = plt.subplots(figsize=(8,6.5))
+    ax.set(title='Poisson Distribution of Cases\n $\Pr(k\mid\lambda)$')
     plt.plot(k, y,
     marker='o',
         markersize=3,
@@ -207,6 +207,7 @@ def plot_it(filename):
 plot_it(filename='./img/systrom-1.png')
 #+end_src
 
+#+attr_latex: :width 0.6\linewidth
 #+RESULTS:
 [[file:./img/systrom-1.png]]
 
@@ -216,7 +217,7 @@ based on chance.
 
 But in our case, we know there have been $k$ cases and we need to know what
 value of $\lambda$ is most likely. In order to do this, we fix $k$ in place
-while varying $\lambda$. __This is called the likelihood function.__
+while varying $\lambda$. *This is called the likelihood function.*
 
 For example, imagine we observe $k=20$ new cases, and we want to know how
 likely each $\lambda$ is:
@@ -234,8 +235,8 @@ likelihood = pd.Series(
 
 def plot_it(filename):
     likelihood.plot(
-        title=r'Likelihood $P\left(k_t=20|\lambda\right)$', 
-        figsize=(6,2.5)
+        title=r'Likelihood $Pr\left(k_t=20\mid\lambda\right)$', 
+        figsize=(8,6.5)
     )
     plt.legend(title="$\lambda$", labels=lambdas)
     plt.savefig(filename)
@@ -244,6 +245,7 @@ def plot_it(filename):
 plot_it(filename='./img/systrom-2.png')
 #+end_src
 
+#+attr_latex: :width 0.6\linewidth
 #+RESULTS:
 [[file:./img/systrom-2.png]]
 
