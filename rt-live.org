@@ -109,6 +109,49 @@ Additionally, a huge thanks to [[http://www.twitter.com/fdellaert][Frank Dellaer
 of the process and to [[http://www.twitter.com/adamlerer][Adam Lerer]] who implemented the changes. 
 Not only did I learn something new, it made the model much more responsive.
 
+** Bettencourt & Ribeiro's Approach
+Every day, we learn how many more people have COVID-19. This new case count
+gives us a clue about the current value of $R_t$. We also, figure that the
+value of $R_t$ today is related to the value of $R_{t-1}$ (yesterday's value)
+and every previous value of $R_{t-m}$ for that matter.
+
+With these insights, the authors use 
+[[https://en.wikipedia.org/wiki/Bayes%27_theorem][Bayes' rule]] 
+to update their beliefs about the true value of $R_t$ based on how many new
+cases have been reported each day.
+
+This is Bayes' Theorem as we'll use it:
+\begin{align*}
+    \Pr(R_t\mid k) &= \frac{\Pr(k\mid R_t) \cdot \Pr(R_t)}{\Pr(k)} 
+\end{align*}
+
+This says that, having seen $k$ new cases, we believe the distribution of
+$R_t$ is equal to:
+
+- The *likelihood* of seeing $k$ new cases given $R_t$ times \dots
+- The *prior* beliefs of the value of $\Pr(R_t)$ without the data \dots
+- divided by the probability of seeing this many cases in general.
+  
+This is for a single day. To make it iterative: every day that passes, we use
+yesterday's prior $\Pr(R_{t-1})$ to estimate today's prior $\Pr(R_t)$. We will
+assume the distribution of $R_t$ to be a Gaussian centered around $R_{t-1}$, so 
+\begin{align*}
+    \Pr(R_t\mid R_{t-1}) &= \mathscr{N}(R_{t-1}, \sigma), 
+\end{align*}
+where $\sigma$ is a
+hyperparameter (see below on how we estimate $\sigma$). So on day one:
+\begin{align*}
+    \Pr(R_1|k_1) &\propto \Pr(R_1)\cdot \mathscr{L}(R_1 \mid k_1)
+\end{align*}
+On day two:
+\begin{align*}
+    \Pr(R_2|k_1,k_2) 
+        &\propto \Pr(R_2)\cdot \mathscr{L}(R_2|k_2) \\
+        &= \sum_{R_1} {\Pr(R_1|k_1)\cdot \Pr(R_2|R_1)\cdot\mathscr{L}(R_2|k_2) }
+\end{align*}
+etc.
+
+
 \newpage
 * Reference Section [REMOVE]
 #+BIBLIOGRAPHY: refs cell limit:t
