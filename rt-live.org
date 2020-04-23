@@ -100,30 +100,6 @@ of the process and to [Adam Lerer](http://www.twitter.com/adamlerer/) who
 implemented the changes. Not only did I learn something new, it made the
 model much more responsive.
 
-#+begin_src python :session *Python-3.x* :exports both :results output
-import pandas as pd
-import numpy as np
-
-from matplotlib import pyplot as plt
-from matplotlib.dates import date2num, num2date
-from matplotlib import dates as mdates
-from matplotlib import ticker
-from matplotlib.colors import ListedColormap
-from matplotlib.patches import Patch
-
-from scipy import stats as sps
-from scipy.interpolate import interp1d
-
-from IPython.display import clear_output
-
-FILTERED_REGION_CODES = ['AS', 'GU', 'PR', 'VI', 'MP']
-
-get_ipython().run_line_magic('config', "InlineBackend.figure_format = 'retina'")
-#+end_src
-
-#+RESULTS:
-: 
-: 
 : 
 
 ** Bettencourt & Ribeiro's Approach
