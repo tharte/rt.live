@@ -315,6 +315,125 @@ You can see that each day we have a independent guesses for $R_t$. The goal
 is to combine the information we have about previous days with the current
 day. To do this, we use Bayes' theorem.
 
+* Performing the Bayesian Update
+To perform the Bayesian update, we need to multiply the likelihood by the prior
+(which is just the previous day's likelihood without our Gaussian update)
+to get the posteriors. Let's do that using the cumulative product of each
+successive day:
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+posteriors = likelihood_r_t.cumprod(axis=1)
+posteriors = posteriors / np.sum(posteriors, axis=0)
+
+columns = pd.Index(range(1, posteriors.shape[1]+1), name='Day')
+posteriors = pd.DataFrame(
+    data    = posteriors,
+    index   = r_t_range,
+    columns = columns
+)
+
+
+def plot_it(filename):
+    ax = posteriors.plot(
+        title='Posterior $P(R_t|k)$',
+        xlim=(0,10),
+        figsize=(8,6.5)
+    )
+    ax.legend(title='Day')
+    ax.set_xlabel('$R_t$');
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-4.png')
+#+end_src
+
+#+attr_latex: :width 0.6\linewidth
+#+RESULTS:
+[[file:./img/systrom-4.png]]
+
+Notice how on Day 1, our posterior matches Day 1's likelihood from
+above? That's because we have no information other than that day. However,
+when we update the prior using Day 2's information, you can see the curve
+has moved left, but not nearly as left as the likelihood for Day 2 from
+above. This is because Bayesian updating uses information from both days
+and effectively averages the two. Since Day 3's likelihood is in between
+the other two, you see a small shift to the right, but more importantly:
+a narrower distribution. We're becoming *more* confident in our believes
+of the true value of $R_t$.
+
+From these posteriors, we can answer important questions such as :
+#+begin_quote
+``What is the most likely value of $R_t$ each day?''
+#+end_quote
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results output
+most_likely_values = posteriors.idxmax(axis=0)
+print(most_likely_values)
+#+end_src
+
+#+RESULTS:
+: Day
+: 1    5.85
+: 2    4.22
+: 3    4.33
+: dtype: float64
+: 
+: 
+
+We can also obtain the 
+[[https://www.sciencedirect.com/topics/mathematics/highest-density-interval][highest density intervals]]
+for $R_t$:
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results output
+hdi = highest_density_interval(posteriors, debug=True)
+print( f'.\n{hdi.tail()}' )
+#+end_src
+
+#+RESULTS:
+: .
+:      Low_90  High_90
+: Day                 
+: 1      3.89     7.55
+: 2      2.96     5.33
+: 3      3.42     5.12
+: 
+: 
+
+Finally, we can plot both the most likely values for $R_t$ and the HDIs over
+time. This is the most useful representation as it shows how our beliefs
+change with every day.
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+def plot_it(filename):
+    ax = most_likely_values.plot(
+        marker='o',
+        label='Most Likely',
+        title=f'$R_t$ by day',
+        c='k',
+        markersize=4
+    )
+    ax.fill_between(
+        hdi.index,
+        hdi['Low_90'],
+        hdi['High_90'],
+        color='k',
+        alpha=.1,
+        lw=0,
+        label='HDI'
+    )
+    ax.legend();
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-5.png')
+#+end_src
+
+#+RESULTS:
+[[file:./img/systrom-5.png]]
+
+We can see that the most likely value of $R_t$ changes with time and the
+highest-density interval narrows as we become more sure of the true value of
+$R_t$ over time. Note that since we only had four days of history, I did not
+apply the process to this sample. Next, however, we'll turn to a real-world
+application where this process is necessary.
+
 
 \newpage
 * Reference Section [REMOVE]
