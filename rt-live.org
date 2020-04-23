@@ -183,12 +183,11 @@ print(y.shape)
 : 
 : 
 
-__Note__: this was a terse expression which makes it tricky. All I did was
-to make $k$ a column. By giving it a column for $k$ and a 'row' for lambda
+#+begin_quote
+*Note*: this was a terse expression which makes it tricky. All I did was
+to make $k$ a column. By giving it a column for $k$ and a ``row'' for lambda
 it will evaluate the pmf over both and produce an array that has $k$ rows
 and lambda columns. This is an efficient way of producing many distributions
-all at once, and __you will see it used again below__!
-
 # In[15]:
 
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results file
