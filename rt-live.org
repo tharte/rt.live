@@ -109,7 +109,7 @@ Additionally, a huge thanks to [[http://www.twitter.com/fdellaert][Frank Dellaer
 of the process and to [[http://www.twitter.com/adamlerer][Adam Lerer]] who implemented the changes. 
 Not only did I learn something new, it made the model much more responsive.
 
-** Bettencourt & Ribeiro's Approach
+* Bettencourt & Ribeiro's Approach
 Every day, we learn how many more people have COVID-19. This new case count
 gives us a clue about the current value of $R_t$. We also, figure that the
 value of $R_t$ today is related to the value of $R_{t-1}$ (yesterday's value)
@@ -151,7 +151,7 @@ On day two:
 \end{align*}
 etc.
 
-** Choosing a Likelihood Function $Pr\left(k_t\mid R_t\right)$
+* Choosing a Likelihood Function $Pr\left(k_t\mid R_t\right)$
 A likelihood function function says how likely we are to see $k$ new cases,
 given a value of $R_t$.
 
