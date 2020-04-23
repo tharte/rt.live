@@ -188,14 +188,15 @@ print(y.shape)
 to make $k$ a column. By giving it a column for $k$ and a ``row'' for lambda
 it will evaluate the pmf over both and produce an array that has $k$ rows
 and lambda columns. This is an efficient way of producing many distributions
-# In[15]:
+all at once, and *you will see it used again below*!
+#+end_quote
 
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results file
 def plot_it(filename):
     fig, ax = plt.subplots(figsize=(6,2.5))
     ax.set(title='Poisson Distribution of Cases\n $p(k|\lambda)$')
     plt.plot(k, y,
-        marker='o',
+    marker='o',
         markersize=3,
         lw=0
     )
