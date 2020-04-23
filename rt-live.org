@@ -109,10 +109,9 @@ Additionally, a huge thanks to [[http://www.twitter.com/fdellaert][Frank Dellaer
 of the process and to [[http://www.twitter.com/adamlerer][Adam Lerer]] who implemented the changes. 
 Not only did I learn something new, it made the model much more responsive.
 
-
 \newpage
 * Reference Section [REMOVE]
-#+BIBLIOGRAPHY: /home/tharte/dot/include/refs cell limit:t
+#+BIBLIOGRAPHY: refs cell limit:t
 
 \appendix 
 \newpage
