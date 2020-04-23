@@ -409,6 +409,16 @@ time. This is the most useful representation as it shows how our beliefs
 change with every day.
 
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+if False:
+    fig, ax = plt.subplots(figsize=(8,6.5))
+    plt.plot( most_likely_values,
+        marker='o',
+        label='Most Likely',
+        title=f'$R_t$ by day',
+        c='k',
+        # markersize=4
+    )
+
 def plot_it(filename):
     ax = most_likely_values.plot(
         marker='o',
@@ -430,13 +440,15 @@ def plot_it(filename):
     ax.legend();
     plt.savefig(filename)
     return filename
-    
+
 plot_it(filename='./img/systrom-5.png')
 #+end_src
 
-#+attr_latex: :width 0.6\linewidth
 #+RESULTS:
 [[file:./img/systrom-5.png]]
+
+#+attr_latex: :width 0.6\linewidth
+#+RESULTS:
 
 We can see that the most likely value of $R_t$ changes with time and the
 highest-density interval narrows as we become more sure of the true value of
