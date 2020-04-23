@@ -250,14 +250,32 @@ plot_it(filename='./img/systrom-2.png')
 [[file:./img/systrom-2.png]]
 
 This says that if we see 20 cases, the most likely value of $\lambda$ is
-(not surprisingly) 20. But we're not certain: it's possible lambda was 21
+(not surprisingly) 20. But we're not certain: it's possible $\lambda$ was 21
 or 17 and saw 20 new cases by chance alone. It also says that it's unlikely
 $\lambda$ was 40 and we saw 20.
 
-Great. We have $P\left(\lambda_t|k_t\right)$ which is parameterized
-by $\lambda$ but we were looking for $P\left(k_t|R_t\right)$ which is
+Great. We have $Pr\left(\lambda_t\mid k_t\right)$ which is parameterized
+by $\lambda$ but we were looking for $Pr\left(k_t\mid R_t\right)$ which is
 parameterized by $R_t$. We need to know the relationship between $\lambda$
 and $R_t$
+
+* Connecting $\lambda$ and $R_t$
+_The key insight to making this work is to realize there's a connection between $R_t$ and $\lambda$__. [The derivation](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0002185) is beyond the scope of this notebook, but here it is:
+
+\begin{equation}
+    \lambda = k_{t-1}e^{\gamma(R_t-1)}
+\end{equation}
+
+where $\gamma$ is the reciprocal of the serial interval ([about 7 days for COVID19](https://wwwnc.cdc.gov/eid/article/26/7/20-0282_article)). Since we know every new case count on the previous day, we can now reformulate the likelihood function as a Poisson parameterized by fixing $k$ and varying $R_t$.
+
+\begin{equation}
+    \lambda = k_{t-1}e^{\gamma(R_t-1)}
+\end{equation}
+
+\begin{equation}
+    P\left(k|R_t\right) = \frac{\lambda^k e^{-\lambda}}{k!}
+\end{equation}
+
 
 
 \newpage
