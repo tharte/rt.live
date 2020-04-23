@@ -45,6 +45,9 @@ Source:
 * Estimating COVID-19's $R_t$ in Real-Time
 Author: Kevin Systrom - April 17
 
+Temporary reference to avoid issues with BibTeX:
+\cite[Online peer-reviewed journal]{Bettencourt:08}
+
 In any epidemic, $R_t$ is the measure known as the effective reproduction
 number. It's the number of people who become infected per infectious person at
 time $t$. The most well-known version of this number is the basic reproduction
