@@ -151,6 +151,112 @@ On day two:
 \end{align*}
 etc.
 
+** Choosing a Likelihood Function $Pr\left(k_t\mid R_t\right)$
+A likelihood function function says how likely we are to see $k$ new cases,
+given a value of $R_t$.
+
+Any time you need to model ``arrivals'' over some time
+period of time, statisticians like to use the 
+[[Poisson Distribution][https://en.wikipedia.org/wiki/Poisson_distribution]].
+Given an average arrival rate of $\lambda$ new cases per day, the probability of
+seeing $k$ new cases is distributed according to the Poisson distribution:
+\begin{align*}
+    \Pr(k\mid\lambda) &= \frac{\lambda^k e^{-\lambda}}{k!}
+\end{align*}
+
+#+begin_src python :session *Python-3.x* :exports both :results output
+# Column vector of k
+k = np.arange(0, 70)[:, None]
+
+# Different values of Lambda
+lambdas = [10, 20, 30, 40]
+
+# Evaluated the Probability Mass Function (remember: poisson is discrete)
+y = sps.poisson.pmf(k, lambdas)
+
+# Show the resulting shape
+print(y.shape)
+#+end_src
+
+#+RESULTS:
+: (70, 4)
+: 
+: 
+
+__Note__: this was a terse expression which makes it tricky. All I did was
+to make $k$ a column. By giving it a column for $k$ and a 'row' for lambda
+it will evaluate the pmf over both and produce an array that has $k$ rows
+and lambda columns. This is an efficient way of producing many distributions
+all at once, and __you will see it used again below__!
+
+# In[15]:
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+def plot_it(filename):
+    fig, ax = plt.subplots(figsize=(6,2.5))
+    ax.set(title='Poisson Distribution of Cases\n $p(k|\lambda)$')
+    plt.plot(k, y,
+        marker='o',
+        markersize=3,
+        lw=0
+    )
+    plt.legend(title="$\lambda$", labels=lambdas)
+    fig.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-1.png')
+#+end_src
+
+#+RESULTS:
+[[file:./img/systrom-1.png]]
+
+The Poisson distribution says that if you think you're going to have $\lambda$
+cases per day, you'll probably get that many, plus or minus some variation
+based on chance.
+
+But in our case, we know there have been $k$ cases and we need to know what
+value of $\lambda$ is most likely. In order to do this, we fix $k$ in place
+while varying $\lambda$. __This is called the likelihood function.__
+
+For example, imagine we observe $k=20$ new cases, and we want to know how
+likely each $\lambda$ is:
+
+# In[16]:
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+k = 20
+lam = np.linspace(1, 45, 90)
+likelihood = pd.Series(
+    data=sps.poisson.pmf(k, lam),
+    index=pd.Index(lam, name='$\lambda$'),
+    name='lambda'
+)
+
+def plot_it(filename):
+    likelihood.plot(
+        title=r'Likelihood $P\left(k_t=20|\lambda\right)$', 
+        figsize=(6,2.5)
+    )
+    plt.legend(title="$\lambda$", labels=lambdas)
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-2.png')
+#+end_src
+
+#+RESULTS:
+[[file:./img/systrom-2.png]]
+
+This says that if we see 20 cases, the most likely value of $\lambda$ is
+(not surprisingly) 20. But we're not certain: it's possible lambda was 21
+or 17 and saw 20 new cases by chance alone. It also says that it's unlikely
+$\lambda$ was 40 and we saw 20.
+
+Great. We have $P\left(\lambda_t|k_t\right)$ which is parameterized
+by $\lambda$ but we were looking for $P\left(k_t|R_t\right)$ which is
+parameterized by $R_t$. We need to know the relationship between $\lambda$
+and $R_t$
+
 
 \newpage
 * Reference Section [REMOVE]
