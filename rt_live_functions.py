@@ -52,7 +52,6 @@ def prepare_cases(cases, cutoff=25):
 
     idx_start = np.searchsorted(smoothed, cutoff)
 
-    # BUGFIX:
     smoothed = smoothed.iloc[idx_start[0]:]
     original = new_cases.loc[smoothed.index]
 
