@@ -663,6 +663,100 @@ def plot_it(filename):
 plot_it(filename='./img/systrom-8.png')
 #+end_src
 
+#+attr_latex: :width 0.6\linewidth
+#+RESULTS:
+[[file:./img/systrom-8.png]]
+
+** Choosing the optimal $\sigma$
+In the previous section we described choosing an optimal $\sigma$, but we
+just assumed a value. But now that we can evaluate each state with any sigma,
+we have the tools for choosing the optimal $\sigma$.
+
+Above we said we'd choose the value of $\sigma$ that maximizes the likelihood
+of the data $P(k)$. Since we don't want to overfit on any one state, we choose
+the sigma that maximizes $P(k)$ over every state. To do this, we add up all
+the log likelihoods per state for each value of sigma then choose the maximum.
+
+Note: this takes a while!
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results output
+states.loc[('MA', pd.Timestamp('2020-04-20'))] = 39643
+#+end_src
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results output
+print( f".\n{states.xs('MA').diff().tail()}" )
+#+end_src
+
+#+RESULTS:
+#+begin_example
+.
+date
+2020-04-19    1705.0
+2020-04-20    1566.0
+2020-04-21    1556.0
+2020-04-22    1745.0
+2020-04-23    3079.0
+Name: positive, dtype: float64
+
+
+#+end_example
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results output
+sigmas = np.linspace(1/20, 1, 20)
+
+targets = ~states.index.get_level_values('state').isin(FILTERED_REGION_CODES)
+states_to_process = states.loc[targets]
+
+results = {}
+
+for state_name, cases in states_to_process.groupby(level='state'):
+    print(state_name)
+    new, smoothed = prepare_cases(cases, cutoff=25)
+    if len(smoothed) == 0:
+        new, smoothed = prepare_cases(cases, cutoff=10)
+    result = {}
+    # Holds all posteriors with every given value of sigma
+    result['posteriors'] = []
+    # Holds the log likelihood across all k for each value of sigma
+    result['log_likelihoods'] = []
+    for sigma in sigmas:
+        posteriors, log_likelihood = get_posteriors(smoothed, sigma=sigma)
+        result['posteriors'].append(posteriors)
+        result['log_likelihoods'].append(log_likelihood)
+    # Store all results keyed off of state name
+    results[state_name] = result
+    clear_output(wait=True)
+
+print('Done.')
+#+end_src
+
+Now that we have all the log likelihoods, we can sum for each value of sigma
+across states, graph it, then choose the maximum.
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+# Each index of this array holds the total of the log likelihoods for
+# the corresponding index of the sigmas array.
+total_log_likelihoods = np.zeros_like(sigmas)
+
+# Loop through each state's results and add the log likelihoods to the running total.
+for state_name, result in results.items():
+    total_log_likelihoods += result['log_likelihoods']
+
+# Select the index with the largest log likelihood total
+max_likelihood_index = total_log_likelihoods.argmax()
+
+# Select the value that has the highest log likelihood
+sigma = sigmas[max_likelihood_index]
+def plot_it(filename):
+    fig, ax = plt.subplots()
+    ax.set_title(f"Maximum Likelihood value for $\sigma$ = {sigma:.2f}");
+    ax.plot(sigmas, total_log_likelihoods)
+    ax.axvline(sigma, color='k', linestyle=":")
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-9.png')
+#+end_src
+
 #+RESULTS:
 [[file:./img/systrom-8.png]]
 
