@@ -407,7 +407,6 @@ print( f'.\n{hdi.tail()}' )
 Finally, we can plot both the most likely values for $R_t$ and the HDIs over
 time. This is the most useful representation as it shows how our beliefs
 change with every day.
-
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results file
 def plot_it(filename):
     # need a pd.DataFrame here
@@ -469,27 +468,58 @@ Also, case reporting is very erratic based on testing backlogs, etc. To get
 the best view of the 'true' data we can, I've applied a gaussian filter to
 the time series. This is obviously an arbitrary choice, but you'd imagine
 the real world process is not nearly as stochastic as the actual reporting.
-#+BEGIN_SRC python :session *Python-3.x* :exports both :results output
-def prepare_cases(cases, cutoff=25):
-    new_cases = cases.diff()
-    smoothed = new_cases.rolling(
-        7,
-        win_type='gaussian',
-        min_periods=1,
-        center=True
-    ).mean(std=2).round()
-    idx_start = np.searchsorted(smoothed, cutoff)
-    # BUGFIX:
-    smoothed = smoothed.iloc[idx_start[0]:]
-    original = new_cases.loc[smoothed.index]
-    return original, smoothed
-
+#+BEGIN_SRC python :session *Python-3.x* :exports code :results silent
 state_name = 'NY'
 
-cases = states.xs(state_name).rename(f"{state_name} cases")
+cases = states.xs(state_name).rename(f'{state_name} cases')
 original, smoothed = prepare_cases(cases)
 #+end_src
 
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+def make_plottable_df(series, name):
+    date = pd.to_datetime(
+        series.index, infer_datetime_format=True, 
+        errors='coerce'
+    )
+    df = pd.DataFrame(
+        {name: series.values}
+    )
+    df.index = date
+    return df
+
+def plot_it(filename):
+    df_o = make_plottable_df(original, 'Actual')
+    df_s = make_plottable_df(smoothed, 'Smoothed')
+    df   = pd.concat([df_o, df_s], axis=1)
+    fig, ax = plt.subplots()
+    for cn in df.keys(): df[cn].plot(
+        ax=ax,
+        c='k',
+        linestyle = ':' if cn == 'Actual' else '-',
+        alpha=.5,
+        title=f"{state_name} New Cases per Day",
+        legend=True,
+        figsize=(10, 6.5)
+    )
+    plt.savefig(filename)
+    return filename
+
+plot_it(filename='./img/systrom-6-a.png')
+#+end_src
+
+#+attr_latex: :width 0.6\linewidth
+#+RESULTS:
+[[file:./img/systrom-6-a.png]]
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file :eval no
+def plot_it(filename):
+    ax = smoothed.plot(label='Smoothed', legend=True)
+    ax.get_figure().set_facecolor('w')
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-6-b.png')
+#+end_src
 
 \newpage
 * Reference Section [REMOVE]
