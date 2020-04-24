@@ -56,6 +56,7 @@ import matplotlib
 matplotlib.use('Agg')  # Agg backend for non-interactive use with Org
 #+end_src
 
+\newpage
 * Introduction
 In any epidemic, $R_t$ is the measure known as the 
 /effective reproduction number/. 
@@ -512,7 +513,7 @@ plot_it(filename='./img/systrom-6-a.png')
 [[file:./img/systrom-6-a.png]]
 
 ** Running the Algorithm
-*** Choosing the Gaussian $\sigma$ for $P(R_t|R_{t-1})$
+*** Choosing the Gaussian $\sigma$ for $\Pr(R_t\mid R_{t-1})$
 Note: you can safely skip this section if you trust that we chose the right
 value of $\sigma$ for the process below. Otherwise, read on.  
 
@@ -533,7 +534,7 @@ assuming that $R_t$ fluctuates by about $\sigma$ each day.
 However, there's still an arbitrary choice: what should $\sigma$ be? Adam
 Lerer pointed out that we can use the process of maximum likelihood to inform
 our choice. Here's how it works:
-
+#+begin_quote
 Maximum likelihood says that we'd like to choose a $\sigma$ that maximizes
 the likelihood of seeing our data $k$: $P(k|\sigma)$. Since $\sigma$ is a
 fixed value, let's leave it out of the notation, so we're trying to maximize
@@ -541,34 +542,29 @@ $P(k)$ over all choices of $\sigma$.
  
 Since $P(k)=P(k_0,k_1,\ldots,k_t)=P(k_0)P(k_1)\ldots P(k_t)$ we need to
 define $P(k_t)$. It turns out this is the denominator of Bayes rule:
-
-\begin{equation}
-    P(R_t|k_t) = \frac{P(k_t|R_t)P(R_t)}{P(k_t)}
-\end{equation}
-
+\begin{align*}
+    \Pr(R_t \mid k_t) &= 
+        \frac{\Pr(k_t\mid R_t)\Pr(R_t)}{\Pr(k_t)}
+\end{align*}
 To calculate it, we notice that the numerator is actually just the joint
 distribution of $k$ and $R$:
-\begin{equation}
-    P(k_t,R_t) =  P(k_t|R_t)P(R_t) 
-\end{equation}
-
-We can marginalize the distribution over $R_t$ to get $P(k_t)$:
-\begin{equation}
-P(k_t) = \sum_{R_{t}}{P(k_t|R_t)P(R_t)} 
-\end{equation}
-
-
+\begin{align*}
+    \Pr(k_t,R_t) &=  
+        \Pr(k_t \mid R_t)\Pr(R_t) 
+\end{align*}
+We can marginalize the distribution over $R_t$ to get $\Pr(k_t)$:
+\begin{align*}
+    \Pr(k_t) &= \sum_{R_{t}}{\Pr(k_t \mid R_t)\Pr(R_t)} 
+\end{align*}
 So, if we sum the distribution of the numerator over all values of $R_t$,
-we get $P(k_t)$. And since we're calculating that anyway as we're calculating
+we get $\Pr(k_t)$. And since we're calculating that anyway as we're calculating
 the posterior, we'll just keep track of it separately.
 
-Since we're looking for the value of $\sigma$ that maximizes $P(k)$ overall,
+Since we're looking for the value of $\sigma$ that maximizes $\Pr(k)$ overall,
 we actually want to maximize:
-
-\begin{equation}
+\begin{align*}
     \prod_{t,i}{p(k_{ti})}
-\end{equation}
-
+\end{align*}
 where $t$ are all times and $i$ is each state.
 
 Since we're multiplying lots of tiny probabilities together, it can be
@@ -577,10 +573,10 @@ together. Remember that $\log{ab}=\log{a}+\log{b}$. And since logarithms
 are monotonically increasing, maximizing the sum of the $\log$ of the
 probabilities is the same as maximizing the product of the non-logarithmic
 probabilities for any choice of $\sigma$.
+#+end_quote
 
 
 \newpage
-* Reference Section [REMOVE]
 #+BIBLIOGRAPHY: refs cell limit:t
 
 \appendix 
