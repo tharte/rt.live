@@ -598,10 +598,31 @@ To calculate the posteriors we follow these steps:
 posteriors, log_likelihood = get_posteriors(smoothed, sigma=.25, gamma=GAMMA)
 #+end_src
 
+** The Result
+Below you can see every day (row) of the posterior distribution plotted
+simultaneously. The posteriors start without much confidence (wide) and
+become progressively more confident (narrower) about the true value of $R_t$.
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+def plot_it(filename):
+    ax = posteriors.plot(
+        title=f'{state_name} - Daily Posterior for $R_t$',
+        legend=False, 
+        lw=1,
+        c='k',
+        alpha=.3,
+        xlim=(0.4,6)
+    )
+    ax.set_xlabel('$R_t$') 
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-7.png')
+#+end_src
+
+#+attr_latex: :width 0.6\linewidth
 #+RESULTS:
-: 
-: 
-: 
+[[file:./img/systrom-7.png]]
+
 
 \newpage
 #+BIBLIOGRAPHY: refs cell limit:t
