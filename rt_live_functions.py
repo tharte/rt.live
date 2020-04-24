@@ -39,3 +39,21 @@ def highest_density_interval(pmf, p=.9, debug=False):
         index=[f'Low_{p*100:.0f}',
         f'High_{p*100:.0f}']
     )
+
+def prepare_cases(cases, cutoff=25):
+    new_cases = cases.diff()
+
+    smoothed = new_cases.rolling(
+        7,
+        win_type='gaussian',
+        min_periods=1,
+        center=True
+    ).mean(std=2).round()
+
+    idx_start = np.searchsorted(smoothed, cutoff)
+
+    # BUGFIX:
+    smoothed = smoothed.iloc[idx_start[0]:]
+    original = new_cases.loc[smoothed.index]
+
+    return original, smoothed
