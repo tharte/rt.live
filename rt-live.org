@@ -707,7 +707,7 @@ sigmas = np.linspace(1/20, 1, 20)
 targets = ~states.index.get_level_values('state').isin(FILTERED_REGION_CODES)
 states_to_process = states.loc[targets]
 
-if not len(results):
+if not 'results' in locals() or not len(results):
     results = {}
     for state_name, cases in states_to_process.groupby(level='state'):
         print(state_name)
@@ -761,8 +761,9 @@ def plot_it(filename):
 plot_it(filename='./img/systrom-9.png')
 #+end_src
 
+#+attr_latex: :width 0.6\linewidth
 #+RESULTS:
-[[file:./img/systrom-8.png]]
+[[file:./img/systrom-9.png]]
 
 
 \newpage
