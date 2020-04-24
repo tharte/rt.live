@@ -17,12 +17,12 @@ rt-live:     rt-live.org
 	# rm -f tmp.tex
 
 clean:
-	rm -f corona-virus.aux
-	rm -f corona-virus.bbl
-	rm -f corona-virus.blg
-	rm -f corona-virus.log
-	rm -f corona-virus.toc
-	rm -f corona-virus.out
+	rm -f rt-live.aux
+	rm -f rt-live.bbl
+	rm -f rt-live.blg
+	rm -f rt-live.log
+	rm -f rt-live.toc
+	rm -f rt-live.out
 
 scratch:     scratch.tex
 	pdflatex -shell-escape $<
