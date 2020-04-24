@@ -341,7 +341,7 @@ posteriors = pd.DataFrame(
 
 def plot_it(filename):
     ax = posteriors.plot(
-        title='Posterior $P(R_t|k)$',
+        title='Posterior $Pr(R_t \mid k)$',
         xlim=(0,10),
         figsize=(8,6.5)
     )
