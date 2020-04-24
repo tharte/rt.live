@@ -479,7 +479,6 @@ def prepare_cases(cases, cutoff=25):
         center=True
     ).mean(std=2).round()
     idx_start = np.searchsorted(smoothed, cutoff)
-    # smoothed = smoothed.iloc[idx_start:]
     # BUGFIX:
     smoothed = smoothed.iloc[idx_start[0]:]
     original = new_cases.loc[smoothed.index]
