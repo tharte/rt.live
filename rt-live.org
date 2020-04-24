@@ -725,10 +725,14 @@ if not len(results):
             result['log_likelihoods'].append(log_likelihood)
         # Store all results keyed off of state name
         results[state_name] = result
-        clear_output(wait=True)
 
 print('Done.')
 #+end_src
+
+#+RESULTS:
+: Done.
+: 
+: 
 
 Now that we have all the log likelihoods, we can sum for each value of sigma
 across states, graph it, then choose the maximum.
