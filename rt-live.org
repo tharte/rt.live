@@ -465,6 +465,31 @@ Taking a look at the state, we need to start the analysis when there are
 a consistent number of cases each day. Find the last zero new case day and
 start on the day after that.
 
+Also, case reporting is very erratic based on testing backlogs, etc. To get
+the best view of the 'true' data we can, I've applied a gaussian filter to
+the time series. This is obviously an arbitrary choice, but you'd imagine
+the real world process is not nearly as stochastic as the actual reporting.
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results output
+def prepare_cases(cases, cutoff=25):
+    new_cases = cases.diff()
+    smoothed = new_cases.rolling(
+        7,
+        win_type='gaussian',
+        min_periods=1,
+        center=True
+    ).mean(std=2).round()
+    idx_start = np.searchsorted(smoothed, cutoff)
+    smoothed = smoothed.iloc[idx_start:]
+    smoothed = smoothed.iloc[idx_start[0]:]
+    original = new_cases.loc[smoothed.index]
+    return original, smoothed
+
+state_name = 'NY'
+
+cases = states.xs(state_name).rename(f"{state_name} cases")
+original, smoothed = prepare_cases(cases)
+#+end_src
+
 
 \newpage
 * Reference Section [REMOVE]
