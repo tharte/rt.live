@@ -448,6 +448,23 @@ $R_t$ over time. Note that since we only had four days of history, I did not
 apply the process to this sample. Next, however, we'll turn to a real-world
 application where this process is necessary.
 
+* Real-World Application to US Data
+** Setup
+Load US state case data from [[https://covidtracking.com][CovidTracking.com]]
+#+BEGIN_SRC python :session *Python-3.x* :exports code :results silent
+url = 'https://covidtracking.com/api/v1/states/daily.csv'
+states = pd.read_csv(
+    url,
+    usecols=['date', 'state', 'positive'],
+    parse_dates=['date'],
+    index_col=['state', 'date'],
+    squeeze=True
+).sort_index()
+#+end_src
+Taking a look at the state, we need to start the analysis when there are
+a consistent number of cases each day. Find the last zero new case day and
+start on the day after that.
+
 
 \newpage
 * Reference Section [REMOVE]
