@@ -52,8 +52,8 @@ Source:
 from IPython.display import set_matplotlib_formats
 set_matplotlib_formats('retina')
 
-#import matplotlib
-#matplotlib.use('Agg')  # Agg backend for non-interactive use with Org
+import matplotlib
+matplotlib.use('Agg')  # Agg backend for non-interactive use with Org
 #+end_src
 
 
