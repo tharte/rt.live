@@ -501,6 +501,7 @@ def plot_it(filename):
         legend=True,
         figsize=(10, 6.5)
     )
+    ax.get_figure().set_facecolor('w')
     plt.savefig(filename)
     return filename
 
