@@ -774,23 +774,29 @@ while) and also the most likely value.
 # In[27]:
 
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results output
-final_results = None
+if not 'final_results' in locals() or final_results is None:
+    final_results = None
 
-for state_name, result in results.items():
-    print(state_name)
-    posteriors = result['posteriors'][max_likelihood_index]
-    hdis_90 = highest_density_interval(posteriors, p=.9)
-    hdis_50 = highest_density_interval(posteriors, p=.5)
-    most_likely = posteriors.idxmax().rename('ML')
-    result = pd.concat([most_likely, hdis_90, hdis_50], axis=1)
-    if final_results is None:
-        final_results = result
-    else:
-        final_results = pd.concat([final_results, result])
-    clear_output(wait=True)
+    for state_name, result in results.items():
+        print(f'{state_name} ')
+        posteriors = result['posteriors'][max_likelihood_index]
+        hdis_90 = highest_density_interval(posteriors, p=.9)
+        hdis_50 = highest_density_interval(posteriors, p=.5)
+        most_likely = posteriors.idxmax().rename('ML')
+        result = pd.concat([most_likely, hdis_90, hdis_50], axis=1)
+        if final_results is None:
+            final_results = result
+        else:
+            final_results = pd.concat([final_results, result])
 
 print('Done.')
 #+end_src
+
+#+RESULTS:
+: Done.
+: 
+: 
+
 
 
 
