@@ -798,6 +798,32 @@ print('Done.')
 : 
 
 
+** Plot All US States
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+ncols = 4
+nrows = int(np.ceil(len(results) / ncols))
+
+def plot_it(filename):
+    fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(15, nrows*3))
+    for i, (state_name, result) in enumerate(final_results.groupby('state')):
+        plot_rt(result.iloc[1:], axes.flat[i], state_name)
+    fig.tight_layout()
+    fig.set_facecolor('w')
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-9.png')
+#+end_src
+
+#+RESULTS:
+[[file:<function clear_output at 0x7f7f43a3f8c8>]]
+
+# In[40]:
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results output
+# Since we now use a uniform prior, the first datapoint is pretty bogus, so just truncating it here
+final_results = final_results.groupby('state').apply(lambda x: x.iloc[1:].droplevel(0))
+#+end_src
 
 
 \newpage
