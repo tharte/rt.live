@@ -623,6 +623,49 @@ plot_it(filename='./img/systrom-7.png')
 #+RESULTS:
 [[file:./img/systrom-7.png]]
 
+** Plotting in the Time Domain with Credible Intervals
+Since our results include uncertainty, we'd like to be able to view the
+most likely value of $R_t$ along with its highest-density interval.
+# In[14]:
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results output
+hdis = highest_density_interval(posteriors, p=.9)
+most_likely = posteriors.idxmax().rename('ML')
+
+# Look into why you shift -1
+result = pd.concat([most_likely, hdis], axis=1)
+print( f'.\n{result.tail()}' )
+#+end_src
+
+#+RESULTS:
+#+begin_example
+.
+              ML  Low_90  High_90
+date                             
+2020-04-19  0.06    0.00     0.21
+2020-04-20  0.38    0.22     0.52
+2020-04-21  0.66    0.50     0.80
+2020-04-22  0.90    0.74     1.04
+2020-04-23  1.11    0.95     1.25
+
+
+#+end_example
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+def plot_it(filename):
+    fig, ax = plt.subplots(figsize=(600/72,400/72))
+    plot_rt(result, ax, state_name, fig)
+    ax.set_title(f'Real-time $R_t$ for {state_name}')
+    ax.xaxis.set_major_locator(mdates.WeekdayLocator())
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-8.png')
+#+end_src
+
+#+RESULTS:
+[[file:./img/systrom-8.png]]
+
 
 \newpage
 #+BIBLIOGRAPHY: refs cell limit:t
