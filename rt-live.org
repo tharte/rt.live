@@ -833,14 +833,143 @@ final_results = final_results.groupby('state').apply(lambda x: x.iloc[1:].drople
 \newpage
 
 ** Export Data to CSV
-#+begin_src bash :exports both results :output
+Create a ~data~ folder:
+#+begin_src bash :exports both code :results silent
 mkdir -p ./data
 #+end_src
 
-#+begin_src python :session *Python-3.x* :exports both results :output
-# Uncomment the following line if you'd like to export the data
+Export the data the ~data~ folder:
+#+begin_src python :session *Python-3.x* :exports code results :silent
 final_results.to_csv('data/rt_old.csv')
 #+end_src
+
+
+** Standings
+#+begin_src python :session *Python-3.x* :exports both results :output
+# As of 4/12
+no_lockdown = [
+    'North Dakota', 'ND',
+    'South Dakota', 'SD',
+    'Nebraska', 'NE',
+    'Iowa', 'IA',
+    'Arkansas','AR'
+]
+partial_lockdown = [
+    'Utah', 'UT',
+    'Wyoming', 'WY',
+    'Oklahoma', 'OK',
+    'Massachusetts', 'MA'
+]
+
+FULL_COLOR = [.7,.7,.7]
+NONE_COLOR = [179/255,35/255,14/255]
+PARTIAL_COLOR = [.5,.5,.5]
+ERROR_BAR_COLOR = [.3,.3,.3]
+#+end_src
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+filtered = final_results.index.get_level_values(0).isin(FILTERED_REGION_CODES)
+mr = final_results.loc[~filtered].groupby(level=0)[['ML', 'High_90', 'Low_90']].last()
+
+def plot_standings(mr, figsize=None, title='Most Recent $R_t$ by State'):
+    if not figsize:
+        figsize = ((15.9/50)*len(mr)+.1,2.5)
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.set_title(title)
+    err = mr[['Low_90', 'High_90']].sub(mr['ML'], axis=0).abs()
+    bars = ax.bar(
+        mr.index,
+        mr['ML'],
+        width=.825,
+        color=FULL_COLOR,
+        ecolor=ERROR_BAR_COLOR,
+        capsize=2,
+        error_kw={'alpha':.5, 'lw':1},
+        yerr=err.values.T
+    )
+    for bar, state_name in zip(bars, mr.index):
+        if state_name in no_lockdown:
+            bar.set_color(NONE_COLOR)
+        if state_name in partial_lockdown:
+            bar.set_color(PARTIAL_COLOR)
+    labels = mr.index.to_series().replace({'District of Columbia':'DC'})
+    ax.set_xticklabels(labels, rotation=90, fontsize=11)
+    ax.margins(0)
+    ax.set_ylim(0,2.)
+    ax.axhline(1.0, linestyle=':', color='k', lw=1)
+    leg = ax.legend(
+        handles=[
+            Patch(label='Full', color=FULL_COLOR),
+            Patch(label='Partial', color=PARTIAL_COLOR),
+            Patch(label='None', color=NONE_COLOR)
+        ],
+        title='Lockdown',
+        ncol=3,
+        loc='upper left',
+        columnspacing=.75,
+        handletextpad=.5,
+        handlelength=1
+    )
+    leg._legend_box.align = "left"
+    fig.set_facecolor('w')
+    return fig, ax
+
+
+def plot_it(filename):
+    mr.sort_values('ML', inplace=True)
+    plot_standings(mr);
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-11.png')
+#+end_src
+
+#+RESULTS:
+[[file:./img/systrom-11.png]]
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+def plot_it(filename):
+    mr.sort_values('High_90', inplace=True)
+    plot_standings(mr);
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-12.png')
+#+end_src
+
+#+RESULTS:
+[[file:./img/systrom-12.png]]
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+def plot_it(filename):
+    show = mr[mr.High_90.le(1)].sort_values('ML')
+    fig, ax = plot_standings(show, title='Likely Under Control');
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-13.png')
+#+end_src
+
+#+RESULTS:
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+show = mr[mr.High_90.le(1)].sort_values('ML')
+fig, ax = plot_standings(show, title='Likely Under Control');
+
+# In[48]:
+
+def plot_it(filename):
+    show = mr[mr.Low_90.ge(1.0)].sort_values('Low_90')
+    fig, ax = plot_standings(show, title='Likely Not Under Control');
+    ax.get_legend().remove()
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-13.png')
+#+end_src
+
+
+\newpage
 
 * Build: Python packages
 #+begin_src python :session *Python-3.x* :exports both :results output
