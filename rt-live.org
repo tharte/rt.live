@@ -826,11 +826,6 @@ final_results = final_results.groupby('state').apply(lambda x: x.iloc[1:].drople
 #+end_src
 
 
-\newpage
-#+BIBLIOGRAPHY: refs cell limit:t
-
-\appendix 
-\newpage
 
 ** Export Data to CSV
 Create a ~data~ folder:
@@ -925,7 +920,12 @@ plot_it(filename='./img/systrom-13.png')
 
 
 \newpage
+#+BIBLIOGRAPHY: refs cell limit:t
 
+\appendix 
+\newpage
+
+\newpage
 * Build: Python packages
 #+begin_src python :session *Python-3.x* :exports both :results output
 pd.show_versions()
