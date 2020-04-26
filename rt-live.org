@@ -832,6 +832,16 @@ final_results = final_results.groupby('state').apply(lambda x: x.iloc[1:].drople
 \appendix 
 \newpage
 
+** Export Data to CSV
+#+begin_src bash :exports both results :output
+mkdir -p ./data
+#+end_src
+
+#+begin_src python :session *Python-3.x* :exports both results :output
+# Uncomment the following line if you'd like to export the data
+final_results.to_csv('data/rt_old.csv')
+#+end_src
+
 * Build: Python packages
 #+begin_src python :session *Python-3.x* :exports both :results output
 pd.show_versions()
