@@ -184,3 +184,64 @@ def plot_rt(result, ax, state_name, fig):
     )
     fig.set_facecolor('w')
     
+no_lockdown = [
+    'North Dakota', 'ND',
+    'South Dakota', 'SD',
+    'Nebraska', 'NE',
+    'Iowa', 'IA',
+    'Arkansas','AR'
+]
+partial_lockdown = [
+    'Utah', 'UT',
+    'Wyoming', 'WY',
+    'Oklahoma', 'OK',
+    'Massachusetts', 'MA'
+]
+
+FULL_COLOR = [.7,.7,.7]
+NONE_COLOR = [179/255,35/255,14/255]
+PARTIAL_COLOR = [.5,.5,.5]
+ERROR_BAR_COLOR = [.3,.3,.3]
+def plot_standings(mr, figsize=None, title='Most Recent $R_t$ by State'):
+    if not figsize:
+        figsize = ((15.9/50)*len(mr)+.1,2.5)
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.set_title(title)
+    err = mr[['Low_90', 'High_90']].sub(mr['ML'], axis=0).abs()
+    bars = ax.bar(
+        mr.index,
+        mr['ML'],
+        width=.825,
+        color=FULL_COLOR,
+        ecolor=ERROR_BAR_COLOR,
+        capsize=2,
+        error_kw={'alpha':.5, 'lw':1},
+        yerr=err.values.T
+    )
+    for bar, state_name in zip(bars, mr.index):
+        if state_name in no_lockdown:
+            bar.set_color(NONE_COLOR)
+        if state_name in partial_lockdown:
+            bar.set_color(PARTIAL_COLOR)
+    labels = mr.index.to_series().replace({'District of Columbia':'DC'})
+    ax.set_xticklabels(labels, rotation=90, fontsize=11)
+    ax.margins(0)
+    ax.set_ylim(0,2.)
+    ax.axhline(1.0, linestyle=':', color='k', lw=1)
+    leg = ax.legend(
+        handles=[
+            Patch(label='Full', color=FULL_COLOR),
+            Patch(label='Partial', color=PARTIAL_COLOR),
+            Patch(label='None', color=NONE_COLOR)
+        ],
+        title='Lockdown',
+        ncol=3,
+        loc='upper left',
+        columnspacing=.75,
+        handletextpad=.5,
+        handlelength=1
+    )
+    leg._legend_box.align = "left"
+    fig.set_facecolor('w')
+    return fig, ax
+

@@ -641,11 +641,11 @@ print( f'.\n{result.tail()}' )
 .
               ML  Low_90  High_90
 date                             
-2020-04-19  0.06    0.00     0.21
-2020-04-20  0.38    0.22     0.52
-2020-04-21  0.66    0.50     0.80
-2020-04-22  0.90    0.74     1.04
-2020-04-23  1.11    0.95     1.25
+2020-04-21  0.88    0.71     1.01
+2020-04-22  1.52    1.36     1.65
+2020-04-23  1.70    1.56     1.83
+2020-04-24  1.78    1.64     1.90
+2020-04-25  1.72    1.57     1.82
 
 
 #+end_example
@@ -691,11 +691,11 @@ print( f".\n{states.xs('MA').diff().tail()}" )
 #+begin_example
 .
 date
-2020-04-19    1705.0
-2020-04-20    1566.0
 2020-04-21    1556.0
 2020-04-22    1745.0
 2020-04-23    3079.0
+2020-04-24       0.0
+2020-04-25    7325.0
 Name: positive, dtype: float64
 
 
@@ -815,7 +815,7 @@ def plot_it(filename):
 plot_it(filename='./img/systrom-10.png')
 #+end_src
 
-#+attr_latex: :width 0.9\linewidth
+#+attr_latex: :width 0.6\linewidth
 #+RESULTS:
 [[file:./img/systrom-10.png]]
 
@@ -826,12 +826,110 @@ final_results = final_results.groupby('state').apply(lambda x: x.iloc[1:].drople
 #+end_src
 
 
+** Export Data to CSV
+Create a ~data~ folder:
+#+begin_src bash :exports both code :results silent
+mkdir -p ./data
+#+end_src
+
+Export the data the ~data~ folder:
+#+begin_src python :session *Python-3.x* :exports code results :silent
+final_results.to_csv('data/rt_old.csv')
+#+end_src
+
+** Standings
+#+begin_src python :session *Python-3.x* :exports code results :silent
+# As of 4/12
+no_lockdown = [
+    'North Dakota', 'ND',
+    'South Dakota', 'SD',
+    'Nebraska', 'NE',
+    'Iowa', 'IA',
+    'Arkansas','AR'
+]
+partial_lockdown = [
+    'Utah', 'UT',
+    'Wyoming', 'WY',
+    'Oklahoma', 'OK',
+    'Massachusetts', 'MA'
+]
+
+FULL_COLOR = [.7,.7,.7]
+NONE_COLOR = [179/255,35/255,14/255]
+PARTIAL_COLOR = [.5,.5,.5]
+ERROR_BAR_COLOR = [.3,.3,.3]
+#+end_src
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+filtered = final_results.index.get_level_values(0).isin(FILTERED_REGION_CODES)
+mr = final_results.loc[~filtered].groupby(level=0)[['ML', 'High_90', 'Low_90']].last()
+
+def plot_it(filename):
+    mr.sort_values('ML', inplace=True)
+    plot_standings(mr, figsize=(16, 4.5));
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-11.png')
+#+end_src
+
+#+attr_latex: :width 0.9\linewidth
+#+RESULTS:
+[[file:./img/systrom-11.png]]
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+def plot_it(filename):
+    mr.sort_values('High_90', inplace=True)
+    plot_standings(mr, figsize=(16, 4.5));
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-12.png')
+#+end_src
+
+#+attr_latex: :width 0.9\linewidth
+#+RESULTS:
+[[file:./img/systrom-12.png]]
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+def plot_it(filename):
+    show = mr[mr.High_90.le(1)].sort_values('ML')
+    fig, ax = plot_standings(show, figsize=(5.25,4.5), title='Likely Under Control');
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-13.png')
+#+end_src
+
+#+attr_latex: :width 0.6\linewidth
+#+RESULTS:
+[[file:./img/systrom-13.png]]
+
+#+BEGIN_SRC python :session *Python-3.x* :exports both :results file
+show = mr[mr.High_90.le(1)].sort_values('ML')
+fig, ax = plot_standings(show, title='Likely Under Control');
+
+def plot_it(filename):
+    show = mr[mr.Low_90.ge(1.0)].sort_values('Low_90')
+    fig, ax = plot_standings(show, figsize=(6, 4.5), title='Likely Not Under Control');
+    ax.get_legend().remove()
+    plt.savefig(filename)
+    return filename
+    
+plot_it(filename='./img/systrom-14.png')
+#+end_src
+
+#+attr_latex: :width 0.6\linewidth
+#+RESULTS:
+[[file:./img/systrom-14.png]]
+
 \newpage
 #+BIBLIOGRAPHY: refs cell limit:t
 
 \appendix 
 \newpage
 
+\newpage
 * Build: Python packages
 #+begin_src python :session *Python-3.x* :exports both :results output
 pd.show_versions()
