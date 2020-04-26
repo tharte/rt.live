@@ -815,7 +815,7 @@ def plot_it(filename):
 plot_it(filename='./img/systrom-10.png')
 #+end_src
 
-#+attr_latex: :width 0.9\linewidth
+#+attr_latex: :width 0.6\linewidth
 #+RESULTS:
 [[file:./img/systrom-10.png]]
 
