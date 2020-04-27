@@ -11,8 +11,6 @@ from matplotlib.patches import Patch
 from scipy import stats as sps
 from scipy.interpolate import interp1d
 
-FILTERED_REGION_CODES = ['AS', 'GU', 'PR', 'VI', 'MP']
-
 def highest_density_interval(pmf, p=.9, debug=False):
     # If we pass a DataFrame, just call this recursively on the columns
     if (isinstance(pmf, pd.DataFrame)):
@@ -184,24 +182,6 @@ def plot_rt(result, ax, state_name, fig):
     )
     fig.set_facecolor('w')
     
-no_lockdown = [
-    'North Dakota', 'ND',
-    'South Dakota', 'SD',
-    'Nebraska', 'NE',
-    'Iowa', 'IA',
-    'Arkansas','AR'
-]
-partial_lockdown = [
-    'Utah', 'UT',
-    'Wyoming', 'WY',
-    'Oklahoma', 'OK',
-    'Massachusetts', 'MA'
-]
-
-FULL_COLOR = [.7,.7,.7]
-NONE_COLOR = [179/255,35/255,14/255]
-PARTIAL_COLOR = [.5,.5,.5]
-ERROR_BAR_COLOR = [.3,.3,.3]
 def plot_standings(mr, figsize=None, title='Most Recent $R_t$ by State'):
     if not figsize:
         figsize = ((15.9/50)*len(mr)+.1,2.5)
