@@ -501,17 +501,6 @@ original, smoothed = prepare_cases(cases)
 #+end_src
 
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results file
-def make_plottable_df(series, name):
-    date = pd.to_datetime(
-        series.index, infer_datetime_format=True, 
-        errors='coerce'
-    )
-    df = pd.DataFrame(
-        {name: series.values}
-    )
-    df.index = date
-    return df
-
 def plot_it(filename):
     df_o = make_plottable_df(original, 'Actual')
     df_s = make_plottable_df(smoothed, 'Smoothed')
@@ -850,7 +839,6 @@ plot_it(filename='./img/systrom-10.png')
 final_results = final_results.groupby('state').apply(lambda x: x.iloc[1:].droplevel(0))
 #+end_src
 
-
 ** Export Data to CSV
 Create a ~data~ folder:
 #+begin_src bash :exports both code :results silent
@@ -861,7 +849,6 @@ Export the data the ~data~ folder:
 #+begin_src python :session *Python-3.x* :exports code :results silent
 final_results.to_csv('data/rt_old.csv')
 #+end_src
-
 
 ** Standings
 #+begin_src python :session *Python-3.x* :exports code :results silent

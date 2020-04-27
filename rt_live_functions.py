@@ -11,6 +11,17 @@ from matplotlib.patches import Patch
 from scipy import stats as sps
 from scipy.interpolate import interp1d
 
+def make_plottable_df(series, name):
+    date = pd.to_datetime(
+        series.index, infer_datetime_format=True, 
+        errors='coerce'
+    )
+    df = pd.DataFrame(
+        {name: series.values}
+    )
+    df.index = date
+    return df
+
 def highest_density_interval(pmf, p=.9, debug=False):
     # If we pass a DataFrame, just call this recursively on the columns
     if (isinstance(pmf, pd.DataFrame)):
