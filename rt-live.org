@@ -666,11 +666,11 @@ print( f'.\n{result.tail()}' )
 .
               ML  Low_90  High_90
 date                             
-2020-04-21  0.88    0.71     1.01
 2020-04-22  1.52    1.36     1.65
-2020-04-23  1.70    1.56     1.83
-2020-04-24  1.78    1.64     1.90
-2020-04-25  1.72    1.57     1.82
+2020-04-23  1.65    1.51     1.78
+2020-04-24  1.64    1.50     1.76
+2020-04-25  1.44    1.29     1.55
+2020-04-26  1.17    1.04     1.29
 
 
 #+end_example
@@ -716,11 +716,11 @@ print( f".\n{states.xs('MA').diff().tail()}" )
 #+begin_example
 .
 date
-2020-04-21    1556.0
 2020-04-22    1745.0
 2020-04-23    3079.0
-2020-04-24       0.0
-2020-04-25    7325.0
+2020-04-24    2977.0
+2020-04-25    2379.0
+2020-04-26    1590.0
 Name: positive, dtype: float64
 
 
@@ -858,12 +858,13 @@ mkdir -p ./data
 #+end_src
 
 Export the data the ~data~ folder:
-#+begin_src python :session *Python-3.x* :exports code results :silent
+#+begin_src python :session *Python-3.x* :exports code :results silent
 final_results.to_csv('data/rt_old.csv')
 #+end_src
 
+
 ** Standings
-#+begin_src python :session *Python-3.x* :exports code results :silent
+#+begin_src python :session *Python-3.x* :exports code :results silent
 # As of 4/12
 no_lockdown = [
     'North Dakota', 'ND',
@@ -884,6 +885,7 @@ NONE_COLOR = [179/255,35/255,14/255]
 PARTIAL_COLOR = [.5,.5,.5]
 ERROR_BAR_COLOR = [.3,.3,.3]
 #+end_src
+
 
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results file
 filtered = final_results.index.get_level_values(0).isin(FILTERED_REGION_CODES)
