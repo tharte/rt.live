@@ -287,7 +287,7 @@ and $R_t$
     \lambda &= k_{t-1}e^{\gamma(R_t-1)}
 \end{align*}
 where $\gamma$ is the reciprocal of the serial interval 
-([[https://wwwnc.cdc.gov/eid/article/26/7/20-0282_article][about 7 days for COVID19]]). 
+([[https://wwwnc.cdc.gov/eid/article/26/7/20-0282_article][about 7 days for COVID-19]]). 
 Since we know every new case count on the previous day, we can now reformulate
 the likelihood function as a Poisson parameterized by fixing $k$ and varying
 $R_t$.
@@ -501,17 +501,6 @@ original, smoothed = prepare_cases(cases)
 #+end_src
 
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results file
-def make_plottable_df(series, name):
-    date = pd.to_datetime(
-        series.index, infer_datetime_format=True, 
-        errors='coerce'
-    )
-    df = pd.DataFrame(
-        {name: series.values}
-    )
-    df.index = date
-    return df
-
 def plot_it(filename):
     df_o = make_plottable_df(original, 'Actual')
     df_s = make_plottable_df(smoothed, 'Smoothed')
@@ -565,8 +554,8 @@ the likelihood of seeing our data $k$: $P(k|\sigma)$. Since $\sigma$ is a
 fixed value, let's leave it out of the notation, so we're trying to maximize
 $P(k)$ over all choices of $\sigma$.
  
-Since $P(k)=P(k_0,k_1,\ldots,k_t)=P(k_0)P(k_1)\ldots P(k_t)$ we need to
-define $P(k_t)$. It turns out this is the denominator of Bayes rule:
+Since $\Pr(k)=P(k_0,k_1,\ldots,k_t)=\Pr(k_0)P(k_1)\ldots \Pr(k_t)$ we need to
+define $\Pr(k_t)$. It turns out this is the denominator of Bayes rule:
 \begin{align*}
     \Pr(R_t \mid k_t) &= 
         \frac{\Pr(k_t\mid R_t)\Pr(R_t)}{\Pr(k_t)}
@@ -651,7 +640,6 @@ plot_it(filename='./img/systrom-7.png')
 ** Plotting in the Time Domain with Credible Intervals
 Since our results include uncertainty, we'd like to be able to view the
 most likely value of $R_t$ along with its highest-density interval.
-# In[14]:
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results output
 hdis = highest_density_interval(posteriors, p=.9)
 most_likely = posteriors.idxmax().rename('ML')
@@ -706,9 +694,6 @@ Note: this takes a while!
 
 #+BEGIN_SRC python :session *Python-3.x* :exports code :results silent
 states.loc[('MA', pd.Timestamp('2020-04-20'))] = 39643
-#+end_src
-
-#+BEGIN_SRC python :session *Python-3.x* :exports both :results output
 print( f".\n{states.xs('MA').diff().tail()}" )
 #+end_src
 
@@ -796,8 +781,6 @@ posterior corresponding to that value of $\sigma$ for each state. Let's also
 calculate the 90% and 50% highest density intervals (this takes a little
 while) and also the most likely value.
 
-# In[27]:
-
 #+BEGIN_SRC python :session *Python-3.x* :exports both :results output
 if not 'final_results' in locals() or final_results is None:
     final_results = None
@@ -850,7 +833,6 @@ plot_it(filename='./img/systrom-10.png')
 final_results = final_results.groupby('state').apply(lambda x: x.iloc[1:].droplevel(0))
 #+end_src
 
-
 ** Export Data to CSV
 Create a ~data~ folder:
 #+begin_src bash :exports both code :results silent
@@ -861,7 +843,6 @@ Export the data the ~data~ folder:
 #+begin_src python :session *Python-3.x* :exports code :results silent
 final_results.to_csv('data/rt_old.csv')
 #+end_src
-
 
 ** Standings
 #+begin_src python :session *Python-3.x* :exports code :results silent
