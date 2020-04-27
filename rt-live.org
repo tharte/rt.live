@@ -56,6 +56,31 @@ import matplotlib
 matplotlib.use('Agg')  # Agg backend for non-interactive use with Org
 #+end_src
 
+#+begin_src python :session *Python-3.x* :exports none :results silent
+# GLOBALS
+FILTERED_REGION_CODES = ['AS', 'GU', 'PR', 'VI', 'MP']
+
+no_lockdown = [
+    'North Dakota', 'ND',
+    'South Dakota', 'SD',
+    'Nebraska', 'NE',
+    'Iowa', 'IA',
+    'Arkansas','AR'
+]
+partial_lockdown = [
+    'Utah', 'UT',
+    'Wyoming', 'WY',
+    'Oklahoma', 'OK',
+    'Massachusetts', 'MA'
+]
+
+FULL_COLOR = [.7,.7,.7]
+NONE_COLOR = [179/255,35/255,14/255]
+PARTIAL_COLOR = [.5,.5,.5]
+ERROR_BAR_COLOR = [.3,.3,.3]
+#+end_src
+
+
 \newpage
 * Introduction
 In any epidemic, $R_t$ is the measure known as the 
