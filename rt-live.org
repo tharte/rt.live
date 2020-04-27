@@ -43,8 +43,8 @@ Source:
    SHA1: ~cfba8cf5979da87adb7f57d6ff9ff3903d7a4f01~
    
 #+begin_src python :session *Python-3.x* :exports none :results silent
-# notebook-specific functions
-%run rt_live_functions.py
+# notebook-specific functions: run in iteractive mode (-i) to make globals available 
+%run -i rt_live_functions.py
 #+end_src
 
 #+begin_src python :session *Python-3.x* :exports none :results silent
