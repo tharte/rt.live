@@ -38,10 +38,14 @@ def highest_density_interval(pmf, p=.9, debug=False):
     # Return all indices with total_p > p
     lows, highs = (total_p > p).nonzero()
 
-    # Find the smallest range (highest density)
-    best = (highs - lows).argmin()
-    low = pmf.index[lows[best]]
-    high = pmf.index[highs[best]]
+    if not len(lows) or not len(highs):
+        low, high = (np.NaN, np.NaN)
+
+    else:
+        # Find the smallest range (highest density)
+        best = (highs - lows).argmin()
+        low = pmf.index[lows[best]]
+        high = pmf.index[highs[best]]
 
     return pd.Series(
         [low, high],
