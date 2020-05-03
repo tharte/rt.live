@@ -295,7 +295,7 @@ axes.linewidth      : 1     ## edge linewidth
 #axes.grid.axis      : both    ## which axis the grid should apply to
 #axes.grid.which     : major   ## gridlines at major, minor or both ticks
 axes.titlesize      : 14   ## fontsize of the axes title
-#axes.titlelocation   : center
+axes.titlelocation   : center
 axes.titleweight    : normal  ## font weight of title
 axes.titlepad       : 10.0     ## pad between axes and title in points
 #axes.labelsize      : medium  ## fontsize of the x any y labels
